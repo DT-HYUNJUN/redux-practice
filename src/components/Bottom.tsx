@@ -14,7 +14,6 @@ const Bottom = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   useEffect(() => {
-    console.log(path);
     setValue(path);
   }, [isLoggedIn, path]);
 
