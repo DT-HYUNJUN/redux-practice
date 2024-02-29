@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp";
 import { Container } from "@mui/material";
 import Bottom from "./components/Bottom";
 import Create from "./pages/Create";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/create" element={<Create />} />
