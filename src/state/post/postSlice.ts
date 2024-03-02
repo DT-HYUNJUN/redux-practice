@@ -1,12 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../fbase";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+
+const storage = getStorage();
 
 interface PostState {
   id: number;
   author: string;
+  displayName: string;
   content: string;
-  isCreated: boolean;
+  isCreated?: boolean;
+  image1?: string;
+  image2?: string;
+  image3?: string;
+  image4?: string;
+  image5?: string;
 }
 
 const getPostLength = async (): Promise<number> => {
@@ -28,6 +37,7 @@ let initialId: number = await getPostLength();
 const initialState: PostState = {
   id: initialId,
   author: "",
+  displayName: "",
   content: "",
   isCreated: false,
 };
@@ -50,16 +60,24 @@ const postSlice = createSlice({
 });
 
 // post 작성
-export const postCreate = createAsyncThunk("post/create", async (post: { author: string; content: string }) => {
-  const { author, content } = post;
+export const postCreate = createAsyncThunk("post/create", async (post: { author: string; displayName: string; content: string; images: File[] }) => {
+  const { author, displayName, content, images } = post;
 
   const currentPostLength = await getPostLength();
 
-  const newPost = {
+  const newPost: PostState = {
     id: currentPostLength + 1,
     author,
+    displayName,
     content,
   };
+
+  for (let i = 0; i < images.length; i++) {
+    const file = images[i];
+    const imageURL = await uploadImage(file, currentPostLength + 1);
+    let keyName = `image${i + 1}`;
+    newPost[keyName] = imageURL;
+  }
 
   const docRef = collection(db, "posts");
   try {
@@ -71,5 +89,18 @@ export const postCreate = createAsyncThunk("post/create", async (post: { author:
     console.log(error);
   }
 });
+
+const uploadImage = async (file: File, postId: number) => {
+  const filePath = `images/${postId}/${file.name}`;
+  try {
+    const storageRef = ref(storage, filePath);
+    await uploadBytes(storageRef, file);
+
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export default postSlice.reducer;

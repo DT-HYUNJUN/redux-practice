@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpAsync } from "../state/auth/authSlice";
 import { AppDispatch, RootState } from "../state/store";
@@ -38,7 +38,7 @@ const SignUp = () => {
   return (
     <form onSubmit={handleSubmit}>
       <ArrowBackIosNew onClick={() => navigate(-1)} sx={{ position: "fixed", top: 10, left: 10 }} />
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px", height: "100vh" }}>
+      <SignUpBox>
         <Typography variant="h3" gutterBottom>
           회원 가입
         </Typography>
@@ -51,9 +51,18 @@ const SignUp = () => {
         <Button component={Link} to="/login" fullWidth variant="outlined">
           로그인
         </Button>
-      </Box>
+      </SignUpBox>
     </form>
   );
 };
 
 export default SignUp;
+
+const SignUpBox = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "10px",
+  height: "calc(100vh - 56px);",
+});

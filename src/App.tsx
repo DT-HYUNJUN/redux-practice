@@ -8,6 +8,10 @@ import { Container, ThemeProvider, createTheme } from "@mui/material";
 import Bottom from "./components/Bottom";
 import Create from "./pages/Create";
 import Profile from "./pages/Profile";
+import { useDispatch } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { checkUser } from "./state/auth/authSlice";
+import { auth } from "./fbase";
 
 const theme = createTheme({
   typography: {
@@ -16,6 +20,28 @@ const theme = createTheme({
 });
 
 function App() {
+  const dispatch = useDispatch();
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const userInfo = {
+        uid: user.uid,
+        displayName: user.displayName!,
+        email: user.email!,
+        isLoggedIn: true,
+      };
+      dispatch(checkUser(userInfo));
+    } else {
+      const userInfo = {
+        uid: "",
+        displayName: "",
+        email: "",
+        isLoggedIn: false,
+      };
+      dispatch(checkUser(userInfo));
+    }
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <Container maxWidth="sm">
