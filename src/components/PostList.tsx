@@ -1,6 +1,5 @@
-import { Stack } from "@mui/material";
-import Grow from "@mui/material/Grow";
 import React, { useEffect, useState } from "react";
+import { Stack } from "@mui/material";
 import { db } from "../fbase";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import PostItem from "./PostItem";

@@ -10,12 +10,14 @@ interface PostState {
   author: string;
   displayName: string;
   content: string;
+  date: number;
   isCreated?: boolean;
+  image0?: string;
   image1?: string;
   image2?: string;
   image3?: string;
   image4?: string;
-  image5?: string;
+  imagesCount?: number;
 }
 
 const getPostLength = async (): Promise<number> => {
@@ -39,6 +41,7 @@ const initialState: PostState = {
   author: "",
   displayName: "",
   content: "",
+  date: 0,
   isCreated: false,
 };
 
@@ -70,12 +73,14 @@ export const postCreate = createAsyncThunk("post/create", async (post: { author:
     author,
     displayName,
     content,
+    date: new Date().getTime(),
+    imagesCount: images.length,
   };
 
   for (let i = 0; i < images.length; i++) {
     const file = images[i];
     const imageURL = await uploadImage(file, currentPostLength + 1);
-    let keyName = `image${i + 1}`;
+    let keyName = `image${i}`;
     newPost[keyName] = imageURL;
   }
 
@@ -90,6 +95,7 @@ export const postCreate = createAsyncThunk("post/create", async (post: { author:
   }
 });
 
+// 이미지 업로드
 const uploadImage = async (file: File, postId: number) => {
   const filePath = `images/${postId}/${file.name}`;
   try {

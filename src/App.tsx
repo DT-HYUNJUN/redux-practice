@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import { Container, ThemeProvider, createTheme } from "@mui/material";
+import { Container, ThemeProvider, createTheme, styled } from "@mui/material";
 import Bottom from "./components/Bottom";
 import Create from "./pages/Create";
 import Profile from "./pages/Profile";
@@ -44,7 +44,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container maxWidth="sm">
+      <MyContainer maxWidth="sm">
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -55,9 +55,13 @@ function App() {
           </Routes>
           <Bottom />
         </BrowserRouter>
-      </Container>
+      </MyContainer>
     </ThemeProvider>
   );
 }
 
 export default App;
+
+const MyContainer = styled(Container)({
+  marginBottom: "66px",
+});

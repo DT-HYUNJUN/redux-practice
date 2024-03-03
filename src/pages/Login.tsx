@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../state/store";
 import { logInAsync } from "../state/auth/authSlice";
 import { ArrowBackIosNew, Visibility, VisibilityOff } from "@mui/icons-material";
+import Divider from "@mui/material/Divider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -50,7 +51,7 @@ const Login = () => {
           로그인
         </Typography>
         <TextField value={email} name="email" type="email" onChange={handleChange} fullWidth label="이메일" variant="outlined" />
-        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+        <FormControl variant="outlined" fullWidth>
           <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
           <OutlinedInput
             value={password}
@@ -71,6 +72,7 @@ const Login = () => {
         <Button type="submit" fullWidth disabled={isDisabled} variant="contained">
           계속하기
         </Button>
+        <Divider flexItem />
         <Button component={Link} to="/signup" fullWidth variant="outlined">
           이메일 회원가입
         </Button>
@@ -87,5 +89,5 @@ const LoginBox = styled(Box)({
   alignItems: "center",
   justifyContent: "center",
   gap: "10px",
-  height: "calc(100vh - 56px);",
+  marginTop: "100px",
 });

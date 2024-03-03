@@ -21,10 +21,25 @@ const Bottom = () => {
     setValue(newValue);
   };
 
+  const handleHomeButtonClick = () => {
+    const scrollToTop = () => {
+      const scrollStep = -window.scrollY / (500 / 50); // 애니메이션 속도 조절
+      const scrollInterval = setInterval(() => {
+        if (window.scrollY !== 0) {
+          window.scrollBy(0, scrollStep);
+        } else {
+          clearInterval(scrollInterval);
+        }
+      }, 15);
+    };
+
+    scrollToTop();
+  };
+
   return (
     <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
       <BottomNavigation value={value} onChange={handleChange}>
-        <BottomNavigationAction component={Link} to="/" value="/" icon={<Home />} />
+        <BottomNavigationAction onClick={handleHomeButtonClick} component={Link} to="/" value="/" icon={<Home />} />
         <BottomNavigationAction component={Link} to="/create" value="/create" icon={<AddBoxOutlinedIcon />} />
         <BottomNavigationAction component={Link} to={isLoggedIn ? "/profile" : "/login"} value={isLoggedIn ? "/profile" : "/login"} icon={<AccountCircleIcon />} />
       </BottomNavigation>

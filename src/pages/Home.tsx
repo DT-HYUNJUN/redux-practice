@@ -10,7 +10,7 @@ const Home = () => {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <Typography variant="h2">My SNS</Typography>
+      {/* <Typography variant="h2">My SNS</Typography> */}
       <Typography variant="h6">{isLoggedIn ? `${displayName}님 안녕하세요` : "로그인 해주세요"}</Typography>
       <PostList />
     </Box>
