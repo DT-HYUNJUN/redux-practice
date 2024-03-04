@@ -8,17 +8,14 @@ import { IPost } from "../types";
 const PostList = () => {
   const [list, setList] = useState<IPost[]>([]);
 
-  useEffect(() => {
-    const q = query(collection(db, "posts"), orderBy("id", "desc"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const posts: IPost[] = [];
-      querySnapshot.forEach((doc) => {
-        posts.push(doc.data() as IPost);
-      });
-      setList(posts);
-    });
-    return unsubscribe;
-  }, []);
+  // const q = query(collection(db, "posts"), orderBy("id", "desc"));
+  // const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //   const posts: IPost[] = [];
+  //   querySnapshot.forEach((doc) => {
+  //     posts.push(doc.data() as IPost);
+  //   });
+  //   setList(posts);
+  // });
 
   return (
     <Stack spacing={4}>

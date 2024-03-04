@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../state/store";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowBackIosNew, Visibility, VisibilityOff } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 const SignUp = () => {
   const [displayName, setDisplayName] = useState("");
@@ -49,9 +50,10 @@ const SignUp = () => {
     <form onSubmit={handleSubmit}>
       <ArrowBackIosNew onClick={() => navigate(-1)} sx={{ position: "fixed", top: 10, left: 10 }} />
       <SignUpBox>
-        <Typography variant="h3" gutterBottom>
+        <LockOutlinedIcon sx={{ fontSize: "60px" }} color="primary" />
+        {/* <Typography variant="h3" gutterBottom>
           회원 가입
-        </Typography>
+        </Typography> */}
         <TextField value={displayName} name="displayName" onChange={handleChange} fullWidth label="닉네임" variant="outlined" />
         <TextField value={email} name="email" type="email" onChange={handleChange} fullWidth label="이메일" variant="outlined" />
         <FormControl variant="outlined" fullWidth>

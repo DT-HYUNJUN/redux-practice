@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "../state/store";
 import { logInAsync } from "../state/auth/authSlice";
 import { ArrowBackIosNew, Visibility, VisibilityOff } from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,9 +48,10 @@ const Login = () => {
     <form onSubmit={handleSubmit}>
       <ArrowBackIosNew onClick={() => navigate(-1)} sx={{ position: "fixed", top: 10, left: 10 }} />
       <LoginBox>
-        <Typography variant="h3" gutterBottom>
+        <LockOutlinedIcon sx={{ fontSize: "60px" }} color="primary" />
+        {/* <Typography variant="h3" gutterBottom>
           로그인
-        </Typography>
+        </Typography> */}
         <TextField value={email} name="email" type="email" onChange={handleChange} fullWidth label="이메일" variant="outlined" />
         <FormControl variant="outlined" fullWidth>
           <InputLabel htmlFor="outlined-adornment-password">비밀번호</InputLabel>
@@ -69,7 +71,7 @@ const Login = () => {
             label="Password"
           />
         </FormControl>
-        <Button type="submit" fullWidth disabled={isDisabled} variant="contained">
+        <Button type="submit" fullWidth disabled={isDisabled} variant="contained" color="primary">
           계속하기
         </Button>
         <Divider flexItem />

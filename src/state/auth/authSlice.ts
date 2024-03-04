@@ -1,19 +1,24 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { auth } from "../../fbase";
+import { createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { auth, db } from "../../fbase";
+import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
 
 interface AuthState {
   uid: string;
   displayName: string;
   email: string;
+  photoURL: string;
   isLoggedIn: boolean;
+  isDeleted: boolean;
 }
 
 const initialState: AuthState = {
   uid: "",
   displayName: "",
   email: "",
+  photoURL: "",
   isLoggedIn: false,
+  isDeleted: false,
 };
 
 const authSlice = createSlice({
@@ -60,6 +65,15 @@ const authSlice = createSlice({
       .addCase(logOutAsync.fulfilled, (state) => {
         state.isLoggedIn = false;
         console.log("fulfilled");
+      })
+      // 회원탈퇴
+      .addCase(deleteUserAsync.pending, (state) => {
+        console.log("pending");
+        state.isDeleted = false;
+      })
+      .addCase(deleteUserAsync.fulfilled, (state) => {
+        state.isDeleted = true;
+        console.log("user deleted");
       });
   },
 });
@@ -98,9 +112,31 @@ export const logInAsync = createAsyncThunk("auth/loginAsync", async (credentials
 });
 
 // 로그아웃
-export const logOutAsync = createAsyncThunk("logOutAsync", async () => {
-  await signOut(auth);
+export const logOutAsync = createAsyncThunk("auth/logOutAsync", async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.log(error);
+  }
 });
+
+// 회원탈퇴
+export const deleteUserAsync = createAsyncThunk("auth/deleteUserAsync", async (displayName: string) => {
+  try {
+    await deleteUser(auth.currentUser);
+    const postsRef = collection(db, "posts");
+    const q = query(postsRef, where("displayName", "==", displayName));
+    const queryDocs = await getDocs(q);
+
+    queryDocs.forEach(async (queryDoc) => {
+      await deleteDoc(doc(db, "posts", `${queryDoc.data().id}`));
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// 회원수정
 
 export const { checkUser } = authSlice.actions;
 

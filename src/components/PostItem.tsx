@@ -46,7 +46,7 @@ const PostItem = (props: Props) => {
   };
 
   return (
-    <Card elevation={8} sx={{ maxWidth: 320, height: 540 }}>
+    <Card elevation={8} sx={{ width: 320, height: 540, borderRadius: "12px", bgcolor: "#e8f2ff" }}>
       <CardHeader sx={{ padding: 1 }} avatar={<Avatar sx={{ bgcolor: "#23ffff" }}>{props.post.displayName?.at(0)}</Avatar>} title={<Typography>{props.post.displayName}</Typography>} />
       {props.post.imagesCount > 0 ? (
         <Slider {...settings}>

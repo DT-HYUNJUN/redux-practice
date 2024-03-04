@@ -9,9 +9,9 @@ const Home = () => {
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "30px" }}>
       {/* <Typography variant="h2">My SNS</Typography> */}
-      <Typography variant="h6">{isLoggedIn ? `${displayName}님 안녕하세요` : "로그인 해주세요"}</Typography>
+      {/* <Typography variant="h6">{isLoggedIn ? `${displayName}님 안녕하세요` : "로그인 해주세요"}</Typography> */}
       <PostList />
     </Box>
   );

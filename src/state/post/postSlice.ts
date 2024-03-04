@@ -20,24 +20,25 @@ interface PostState {
   imagesCount?: number;
 }
 
-const getPostLength = async (): Promise<number> => {
-  const docRef = doc(db, "posts", "metadata");
-  try {
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const docData = docSnap.data();
-      return docData.length;
-    } else return 0;
-  } catch (error) {
-    console.log(error);
-    return 0;
-  }
-};
+// const getPostLength = async (): Promise<number> => {
+//   const docRef = doc(db, "posts", "metadata");
+//   try {
+//     const docSnap = await getDoc(docRef);
+//     if (docSnap.exists()) {
+//       const docData = docSnap.data();
+//       return docData.length;
+//     } else return 0;
+//   } catch (error) {
+//     console.log(error);
+//     return 0;
+//   }
+// };
 
-let initialId: number = await getPostLength();
+// let initialId: number = await getPostLength();
 
 const initialState: PostState = {
-  id: initialId,
+  // id: initialId,
+  id: 0,
   author: "",
   displayName: "",
   content: "",
@@ -49,64 +50,64 @@ const postSlice = createSlice({
   name: "post",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {
-    builder
-      .addCase(postCreate.pending, (state) => {
-        console.log("post creating");
-        state.isCreated = false;
-      })
-      .addCase(postCreate.fulfilled, (state) => {
-        console.log("post created");
-        state.isCreated = true;
-      });
-  },
+  // extraReducers: (builder) => {
+  //   builder
+  //     .addCase(postCreate.pending, (state) => {
+  //       console.log("post creating");
+  //       state.isCreated = false;
+  //     })
+  //     .addCase(postCreate.fulfilled, (state) => {
+  //       console.log("post created");
+  //       state.isCreated = true;
+  //     });
+  // },
 });
 
 // post 작성
-export const postCreate = createAsyncThunk("post/create", async (post: { author: string; displayName: string; content: string; images: File[] }) => {
-  const { author, displayName, content, images } = post;
+// export const postCreate = createAsyncThunk("post/create", async (post: { author: string; displayName: string; content: string; images: File[] }) => {
+//   const { author, displayName, content, images } = post;
 
-  const currentPostLength = await getPostLength();
+//   const currentPostLength = await getPostLength();
 
-  const newPost: PostState = {
-    id: currentPostLength + 1,
-    author,
-    displayName,
-    content,
-    date: new Date().getTime(),
-    imagesCount: images.length,
-  };
+//   const newPost: PostState = {
+//     id: currentPostLength + 1,
+//     author,
+//     displayName,
+//     content,
+//     date: new Date().getTime(),
+//     imagesCount: images.length,
+//   };
 
-  for (let i = 0; i < images.length; i++) {
-    const file = images[i];
-    const imageURL = await uploadImage(file, currentPostLength + 1);
-    let keyName = `image${i}`;
-    newPost[keyName] = imageURL;
-  }
+//   for (let i = 0; i < images.length; i++) {
+//     const file = images[i];
+//     const imageURL = await uploadImage(file, currentPostLength + 1);
+//     let keyName = `image${i}`;
+//     newPost[keyName] = imageURL;
+//   }
 
-  const docRef = collection(db, "posts");
-  try {
-    await setDoc(doc(docRef, `${currentPostLength + 1}`), newPost);
-    await updateDoc(doc(docRef, "metadata"), {
-      length: currentPostLength + 1,
-    });
-  } catch (error) {
-    console.log(error);
-  }
-});
+//   const docRef = collection(db, "posts");
+//   try {
+//     await setDoc(doc(docRef, `${currentPostLength + 1}`), newPost);
+//     await updateDoc(doc(docRef, "metadata"), {
+//       length: currentPostLength + 1,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
-// 이미지 업로드
-const uploadImage = async (file: File, postId: number) => {
-  const filePath = `images/${postId}/${file.name}`;
-  try {
-    const storageRef = ref(storage, filePath);
-    await uploadBytes(storageRef, file);
+// // 이미지 업로드
+// const uploadImage = async (file: File, postId: number) => {
+//   const filePath = `images/${postId}/${file.name}`;
+//   try {
+//     const storageRef = ref(storage, filePath);
+//     await uploadBytes(storageRef, file);
 
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
-  } catch (error) {
-    console.log(error);
-  }
-};
+//     const downloadURL = await getDownloadURL(storageRef);
+//     return downloadURL;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 export default postSlice.reducer;

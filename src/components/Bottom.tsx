@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@mui/material";
-import { Home } from "@mui/icons-material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { useSelector } from "react-redux";
 import { RootState } from "../state/store";
@@ -12,10 +12,11 @@ const Bottom = () => {
   const [value, setValue] = useState(path);
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const isDeleted = useSelector((state: RootState) => state.auth.isDeleted);
 
   useEffect(() => {
     setValue(path);
-  }, [isLoggedIn, path]);
+  }, [isLoggedIn, isDeleted, path]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -23,7 +24,7 @@ const Bottom = () => {
 
   const handleHomeButtonClick = () => {
     const scrollToTop = () => {
-      const scrollStep = -window.scrollY / (500 / 50); // 애니메이션 속도 조절
+      const scrollStep = -window.scrollY / (500 / 200); // 애니메이션 속도 조절
       const scrollInterval = setInterval(() => {
         if (window.scrollY !== 0) {
           window.scrollBy(0, scrollStep);
@@ -37,11 +38,11 @@ const Bottom = () => {
   };
 
   return (
-    <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
-      <BottomNavigation value={value} onChange={handleChange}>
-        <BottomNavigationAction onClick={handleHomeButtonClick} component={Link} to="/" value="/" icon={<Home />} />
+    <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0, borderTopLeftRadius: "18px", borderTopRightRadius: "18px" }} elevation={3}>
+      <BottomNavigation sx={{ borderTopLeftRadius: "18px", borderTopRightRadius: "18px", backgroundColor: "#ffd391" }} value={value} onChange={handleChange}>
+        <BottomNavigationAction onClick={handleHomeButtonClick} component={Link} to="/" value="/" icon={<HomeOutlinedIcon />} />
         <BottomNavigationAction component={Link} to="/create" value="/create" icon={<AddBoxOutlinedIcon />} />
-        <BottomNavigationAction component={Link} to={isLoggedIn ? "/profile" : "/login"} value={isLoggedIn ? "/profile" : "/login"} icon={<AccountCircleIcon />} />
+        <BottomNavigationAction component={Link} to={isLoggedIn ? "/profile" : "/login"} value={isLoggedIn ? "/profile" : "/login"} icon={<AccountCircleOutlinedIcon />} />
       </BottomNavigation>
     </Paper>
   );

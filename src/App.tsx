@@ -12,10 +12,19 @@ import { useDispatch } from "react-redux";
 import { onAuthStateChanged } from "firebase/auth";
 import { checkUser } from "./state/auth/authSlice";
 import { auth } from "./fbase";
+import { red } from "@mui/material/colors";
 
 const theme = createTheme({
   typography: {
     fontFamily: "NanumSquareNeo",
+  },
+  palette: {
+    primary: {
+      main: "#7a95f7",
+    },
+    error: {
+      main: red[400],
+    },
   },
 });
 
@@ -28,7 +37,9 @@ function App() {
         uid: user.uid,
         displayName: user.displayName!,
         email: user.email!,
+        photoURL: user.photoURL,
         isLoggedIn: true,
+        isDeleted: false,
       };
       dispatch(checkUser(userInfo));
     } else {
@@ -36,7 +47,9 @@ function App() {
         uid: "",
         displayName: "",
         email: "",
+        photoURL: user.photoURL,
         isLoggedIn: false,
+        isDeleted: false,
       };
       dispatch(checkUser(userInfo));
     }
