@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { IPost } from "../types";
-import { Avatar, Box, Card, CardContent, CardHeader, CardMedia, IconButton, Typography, styled } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Skeleton, Typography, styled } from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,12 +9,13 @@ import FullscreenIcon from "@mui/icons-material/Fullscreen";
 
 interface Props {
   post: IPost;
-  timeout: number;
 }
 
 const PostItem = (props: Props) => {
   const [open, setOpen] = useState([false, false, false, false, false]);
   const [isClicked, setIsClicked] = useState(false);
+
+  const loading = true;
 
   const handleOpen = (index: number) => {
     setOpen((prevState) => {
@@ -46,9 +47,15 @@ const PostItem = (props: Props) => {
   };
 
   return (
-    <Card elevation={8} sx={{ width: 320, height: 540, borderRadius: "12px", bgcolor: "#e8f2ff" }}>
-      <CardHeader sx={{ padding: 1 }} avatar={<Avatar sx={{ bgcolor: "#23ffff" }}>{props.post.displayName?.at(0)}</Avatar>} title={<Typography>{props.post.displayName}</Typography>} />
-      {props.post.imagesCount > 0 ? (
+    <Card elevation={8} sx={{ width: 320, borderRadius: "12px", bgcolor: "#e8f2ff" }}>
+      <CardHeader
+        sx={{ padding: 1 }}
+        avatar={loading ? <Skeleton animation="wave" variant="circular" width={40} height={40} /> : <Avatar sx={{ bgcolor: "#23ffff" }}>{props.post.displayName?.at(0)}</Avatar>}
+        title={loading ? <Skeleton animation="wave" height={10} width="80%" /> : <Typography>{props.post.displayName}</Typography>}
+      />
+      {loading ? (
+        <Skeleton sx={{ height: 380 }} animation="wave" variant="rectangular" />
+      ) : props.post.imagesCount > 0 ? (
         <Slider {...settings}>
           {[0, 1, 2, 3, 4].map((item) => {
             const imageProp = `image${item}`;
@@ -70,16 +77,30 @@ const PostItem = (props: Props) => {
         <Box height={380} sx={{ bgcolor: "black" }} />
       )}
 
-      <CardContent sx={{ height: "94px" }}>
-        <MyCardContent>
-          <Typography sx={{ wordWrap: "break-word" }} whiteSpace={"pre-line"} variant="body2">
-            {props.post.content}
-          </Typography>
-        </MyCardContent>
-        <Typography variant="caption" color="text.secondary">{`${new Date(props.post.date).getFullYear()}년 ${new Date(props.post.date).getMonth() + 1}월 ${new Date(
-          props.post.date
-        ).getDate()}일`}</Typography>
+      <CardContent>
+        {loading ? (
+          <div>
+            <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
+            <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
+            <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
+          </div>
+        ) : (
+          <MyCardContent>
+            <Typography sx={{ wordWrap: "break-word" }} whiteSpace={"pre-line"} variant="body2">
+              {props.post.content}
+            </Typography>
+          </MyCardContent>
+        )}
       </CardContent>
+      <CardActions sx={{ paddingLeft: "16px", paddingRight: "16px" }}>
+        {loading ? (
+          <Skeleton animation="wave" height={10} width="40%" />
+        ) : (
+          <Typography variant="caption" color="text.secondary">{`${new Date(props.post.date).getFullYear()}년 ${new Date(props.post.date).getMonth() + 1}월 ${new Date(
+            props.post.date
+          ).getDate()}일`}</Typography>
+        )}
+      </CardActions>
       {/* {open.map((isOpen, index) => (
         <Backdrop key={index} sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={isOpen} onClick={() => handleClose(index)} onTouchStart={() => handleClose(index)}>
           {props.post[`image${index}`] && <img width={370} src={props.post[`image${index}`]} alt={`${index}`} />}

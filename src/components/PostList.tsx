@@ -17,10 +17,18 @@ const PostList = () => {
   //   setList(posts);
   // });
 
+  // useEffect(() => {
+  //   onSnapshot(query(collection(db, "posts"), orderBy("id", "desc")), (snapshot) => {
+  //     const tempArr: IPost[] = [];
+  //     snapshot.docs.map((doc) => tempArr.push(doc.data() as IPost));
+  //     setList(tempArr);
+  //   });
+  // }, []);
+
   return (
     <Stack spacing={4}>
       {list.map((post) => (
-        <PostItem key={post.id} post={post} timeout={(list.length - post.id) * 50} />
+        <PostItem key={post.id} post={post} />
       ))}
     </Stack>
   );

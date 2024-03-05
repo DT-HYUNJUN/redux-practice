@@ -1,7 +1,8 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword, deleteUser, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
-import { auth, db } from "../../fbase";
+import { createUserWithEmailAndPassword, deleteUser, getAuth, signInWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
+import { auth, db, storage } from "../../fbase";
 import { collection, deleteDoc, doc, getDocs, query, where } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 interface AuthState {
   uid: string;
@@ -30,6 +31,7 @@ const authSlice = createSlice({
       state.displayName = action.payload.displayName;
       state.email = action.payload.email;
       state.isLoggedIn = action.payload.isLoggedIn;
+      state.photoURL = action.payload.photoURL;
     },
   },
   extraReducers: (builder) => {
@@ -74,6 +76,15 @@ const authSlice = createSlice({
       .addCase(deleteUserAsync.fulfilled, (state) => {
         state.isDeleted = true;
         console.log("user deleted");
+      })
+      // 회원수정
+      .addCase(updateUserAsync.pending, (state) => {
+        console.log("pending");
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        state.displayName = action.payload.displayName;
+        state.photoURL = action.payload.photoURL;
+        console.log("user updated");
       });
   },
 });
@@ -137,6 +148,35 @@ export const deleteUserAsync = createAsyncThunk("auth/deleteUserAsync", async (d
 });
 
 // 회원수정
+export const updateUserAsync = createAsyncThunk("auth/updateUserAsync", async (updatedProfile: { email: string; newDisplayName: string; profileImg?: File }) => {
+  const auth = getAuth();
+
+  try {
+    if (updatedProfile.profileImg) {
+      const filePath = `images/profile/${updatedProfile.email}/${updatedProfile.profileImg.name}`;
+      const storageRef = ref(storage, filePath);
+      await uploadBytes(storageRef, updatedProfile.profileImg);
+      const downloadURL = await getDownloadURL(storageRef);
+      updateProfile(auth.currentUser, {
+        displayName: updatedProfile.newDisplayName,
+        photoURL: downloadURL,
+      });
+      return {
+        displayName: updatedProfile.newDisplayName,
+        photoURL: downloadURL,
+      };
+    } else {
+      updateProfile(auth.currentUser, {
+        displayName: updatedProfile.newDisplayName,
+      });
+      return {
+        displayName: updatedProfile.newDisplayName,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 export const { checkUser } = authSlice.actions;
 

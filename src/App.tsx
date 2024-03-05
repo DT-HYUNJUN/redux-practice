@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
@@ -31,29 +31,31 @@ const theme = createTheme({
 function App() {
   const dispatch = useDispatch();
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const userInfo = {
-        uid: user.uid,
-        displayName: user.displayName!,
-        email: user.email!,
-        photoURL: user.photoURL,
-        isLoggedIn: true,
-        isDeleted: false,
-      };
-      dispatch(checkUser(userInfo));
-    } else {
-      const userInfo = {
-        uid: "",
-        displayName: "",
-        email: "",
-        photoURL: user.photoURL,
-        isLoggedIn: false,
-        isDeleted: false,
-      };
-      dispatch(checkUser(userInfo));
-    }
-  });
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userInfo = {
+          uid: user.uid,
+          displayName: user.displayName!,
+          email: user.email!,
+          photoURL: user.photoURL,
+          isLoggedIn: true,
+          isDeleted: false,
+        };
+        dispatch(checkUser(userInfo));
+      } else {
+        const userInfo = {
+          uid: "",
+          displayName: "",
+          email: "",
+          photoURL: "",
+          isLoggedIn: false,
+          isDeleted: false,
+        };
+        dispatch(checkUser(userInfo));
+      }
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -77,4 +79,5 @@ export default App;
 
 const MyContainer = styled(Container)({
   marginBottom: "66px",
+  minWidth: "375px",
 });
