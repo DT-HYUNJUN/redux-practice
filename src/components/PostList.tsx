@@ -25,6 +25,8 @@ const PostList = () => {
   //   });
   // }, []);
 
+  useEffect(() => {}, []);
+
   return (
     <Stack spacing={4}>
       {list.map((post) => (

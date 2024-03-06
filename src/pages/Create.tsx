@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Container, IconButton, ImageList, ImageListItem, TextField, Typography, styled } from "@mui/material";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-// import { postCreate } from "../state/post/postSlice";
+import { postCreate } from "../state/post/postSlice";
 import { AppDispatch, RootState } from "../state/store";
 import { Link, useNavigate } from "react-router-dom";
 import ImageIcon from "@mui/icons-material/Image";
@@ -19,7 +19,7 @@ const Create = () => {
   const dispatch = useDispatch<AppDispatch>();
   const email = useSelector((state: RootState) => state.auth.email);
   const displayName = useSelector((state: RootState) => state.auth.displayName);
-  // const isCreated = useSelector((state: RootState) => state.post.isCreated);
+  const isCreated = useSelector((state: RootState) => state.post.isCreated);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,9 +45,9 @@ const Create = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isCreated && btnClicked) navigate("/", { replace: true });
-  // }, [isCreated, btnClicked]);
+  useEffect(() => {
+    if (isCreated && btnClicked) navigate("/", { replace: true });
+  }, [isCreated, btnClicked]);
 
   useEffect(() => {
     const urls = postImg.map((file) => URL.createObjectURL(file));
@@ -66,7 +66,7 @@ const Create = () => {
       content,
       images: postImg,
     };
-    // dispatch(postCreate(newPost));
+    dispatch(postCreate(newPost));
   };
 
   const isText = content === "";
@@ -75,7 +75,7 @@ const Create = () => {
     <CreateBox>
       <HeadBox>
         <ArrowBackIosNew />
-        <Button onClick={handleSubmit} disabled={isText} variant="contained" size="small">
+        <Button onClick={handleSubmit} disabled={isText && !btnClicked} variant="contained" size="small">
           게시하기
         </Button>
       </HeadBox>
@@ -101,7 +101,7 @@ const Create = () => {
           value={content}
           onChange={handleInput}
           InputProps={{
-            disableUnderline: true, // border 제거
+            disableUnderline: true,
           }}
         />
       </ContentBox>

@@ -79,7 +79,7 @@ const Profile = () => {
         }}
       >
         <Box component="div" display="flex" flexDirection="column">
-          <Button variant="text" onClick={handleLogOut}>
+          <Button variant="text" sx={{ color: "grey" }} onClick={handleLogOut}>
             로그아웃
           </Button>
           <Button variant="text" color="error" onClick={handleDeleteUser}>
